@@ -12,6 +12,8 @@ fn main() {
         /* This should be a comment */
         x >> 5
         x << 5
+        x <= 5
+        x & x | x ^ x
     "#;
     
     let mut lexer = Lexer::new(code);
