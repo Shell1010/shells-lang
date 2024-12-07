@@ -86,7 +86,7 @@ impl Lexer {
                     self.consume_bitwise_operator();
                 }
 
-                // Keywords and identifiers
+                // Keywords and identifiers - variables
                 'a'..='z' | 'A'..='Z' | '_' => {
                     self.consume_keyword_and_identifier();
                 }
@@ -97,7 +97,7 @@ impl Lexer {
                     self.consume_operator();
                 }
 
-                // Variables
+                // Numba
                 '0'..='9' => self.consume_number(),
 
 
