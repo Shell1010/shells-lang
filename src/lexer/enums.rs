@@ -41,7 +41,7 @@ impl FromStr for LogicalOperator {
             "!"  => Ok(LogicalOperator::Not),
             "&&" => Ok(LogicalOperator::And),
             "||" => Ok(LogicalOperator::Or),
-            "^"  => Ok(LogicalOperator::Xor),
+            "^^"  => Ok(LogicalOperator::Xor),
             _    => Err(format!("Invalid LogicalOperator: {}", op)),
         }
     }
