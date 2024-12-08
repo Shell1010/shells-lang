@@ -41,7 +41,6 @@ impl Parser {
                 "if" => return self.parse_if_statement(),
                 "print" => return self.parse_print_statement(),
                 _ => {
-                    println!("{keyword}");
                     None
                 }
             },
@@ -56,7 +55,6 @@ impl Parser {
         if let Some(Token::Comment(val)) = self.peek() {
             let other_val = val.to_owned();
             self.advance();
-            println!("{}", self.current);
             Some(Statement::Comment(other_val))
         } else {
             None
@@ -107,10 +105,8 @@ impl Parser {
             if keyword == "if" {
                 self.advance();
 
-                // Parse condition
                 let condition = self.parse_expression()?;
 
-                // Parse block
                 let body = match self.parse_block()? {
                     Statement::Block(stmts) => stmts,
                     _ => return None,
@@ -126,7 +122,6 @@ impl Parser {
     }
 
     fn parse_assignment_or_expression(&mut self) -> Option<Statement> {
-        // Peek at the first token without consuming
         let var = self.peek()?;
 
         if let Token::Identifier(var_name) = var {

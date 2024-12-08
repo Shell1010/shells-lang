@@ -97,7 +97,7 @@ fn parse(tokens: Vec<Token>) -> Vec<Statement> {
     println!("Parsing tokens...");
     let mut parser = SyntaxParser::new(tokens);
     let ast = parser.parse().unwrap();
-    // println!("{ast:#?}");
+    println!("{ast:#?}");
     ast
 
 }
