@@ -5,20 +5,20 @@ use std::collections::VecDeque;
 // Token: Represents all possible tokens in the language
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
-    Identifier(String),                    // e.g., x, y
-    Number(f64),                           // e.g., 10, 2.5
-    Keyword(String),                       // e.g., if, print, return, else, elif
-    OperatorToken(Operator),                     // e.g., =, *, 
-    MathOperatorToken(MathOperator),             // e.g., +, -, **, //, %
-    LogicalOperatorToken(LogicalOperator),       // e.g., &&, ^, ||, !
-    BitwiseOperatorToken(BitwiseOperator),       // e.g., <<, >>, ^, |, &
-    ComparisonOperatorToken(ComparisonOperator), // e.g., <, >, <=, >=
-    LeftBrace,                             // {
-    RightBrace,                            // }
-    LeftParen,                             // (
-    RightParen,                            // )
-    Comment(String),                       // Block comment: /* ... */
-    EndOfInput,                            // End of file
+    Identifier(String),                 
+    Number(f64),                        
+    Keyword(String),                       
+    OperatorToken(Operator),                  
+    MathOperatorToken(MathOperator),           
+    LogicalOperatorToken(LogicalOperator),       
+    BitwiseOperatorToken(BitwiseOperator),       
+    ComparisonOperatorToken(ComparisonOperator), 
+    LeftBrace,                         
+    RightBrace,                       
+    LeftParen,                          
+    RightParen,                          
+    Comment(String),                      
+    EndOfInput, 
 }
 
 #[derive(Debug, Clone, PartialEq)]

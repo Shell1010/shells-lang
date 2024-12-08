@@ -1,5 +1,8 @@
 mod lexer;
+mod parser;
 
+use parser::Parser as SyntaxParser;
+use parser::enums::{Statement, Expression};
 use clap::Parser;
 use lexer::{Lexer, Token};
 use std::fs;
@@ -90,12 +93,16 @@ fn lex(source: &str) -> Vec<Token> {
     tokens.to_vec()
 }
 
-fn parse(tokens: Vec<Token>) -> String {
+fn parse(tokens: Vec<Token>) -> Vec<Statement> {
     println!("Parsing tokens...");
-    todo!("Implement parser");
+    let mut parser = SyntaxParser::new(tokens);
+    let ast = parser.parse().unwrap();
+    println!("{ast:#?}");
+    ast
+
 }
 
-fn generate_code(ast: String) -> Vec<u8> {
+fn generate_code(ast: Vec<Statement>) -> Vec<u8> {
     println!("Generating code from AST...");
     todo!("Implement code generator");
 }

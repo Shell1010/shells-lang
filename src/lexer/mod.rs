@@ -1,5 +1,4 @@
 mod lexer;
-mod enums;
+pub mod enums;
 
 pub use lexer::{Lexer, Token};
-
