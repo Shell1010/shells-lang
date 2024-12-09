@@ -102,6 +102,7 @@ impl FromStr for ComparisonOperator {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Operator {
     Equals, // =
+    WalrusEqual, // :=
 }
 
 impl FromStr for Operator {
@@ -110,6 +111,7 @@ impl FromStr for Operator {
     fn from_str(op: &str) -> Result<Self, Self::Err> {
         match op {
             "=" => Ok(Operator::Equals),
+            ":=" => Ok(Operator::WalrusEqual),
             _   => Err(format!("Invalid Operator: {}", op)),
         }
     }

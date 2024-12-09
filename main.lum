@@ -1,11 +1,2 @@
-3 * 4 / 2 * 3
-if x > 5 {
-    y = x * 2
-    print(y)
-}
-/* This should be a comment */
-x >> 5
-x << 5
-x <= 5
-x & x | x ^ x
-
+fn factorial(n, x) { return n * factorial(n-1) }
+factorial n := n * factorial(n - 1)

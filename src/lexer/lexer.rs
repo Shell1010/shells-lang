@@ -16,9 +16,10 @@ pub enum Token {
     LeftBrace,                         
     RightBrace,                       
     LeftParen,                          
-    RightParen,                          
+    RightParen,     
+    Comma,
     Comment(String),                      
-    EndOfInput, 
+    EndOfInput,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -75,6 +76,7 @@ impl Lexer {
                 '}' => {self.tokens.push(Token::RightBrace); self.index += 1;},
                 '(' => {self.tokens.push(Token::LeftParen); self.index += 1;},
                 ')' => {self.tokens.push(Token::RightParen); self.index += 1;},
+                ',' => {self.tokens.push(Token::Comma); self.index += 1;}
 
 
                 'a'..='z' | 'A'..='Z' | '_' => {
@@ -84,7 +86,7 @@ impl Lexer {
 
 
                 // Consume all operators here related to bitwise, comparison, logic(e.g., '>=', '<=', '!=')
-                '>' | '<' | '=' | '^' | '&' | '|' | '!' => {
+                '>' | '<' | '=' | '^' | '&' | '|' | '!' | ':'  => {
                     self.consume_operator();
 
                 }    
@@ -140,11 +142,21 @@ impl Lexer {
                     }
                     return;
                 },
+
+                (':', '=') => {
+                    operator.push(next_ch);
+                    self.index += 1;
+                    match operator.parse::<Operator>() {
+                        Ok(op) => self.tokens.push(Token::OperatorToken(op)),
+                        Err(_) => {}
+                    }
+                    return;
+                }
                 _ => {} 
             }
         }
 
-        // Single
+        // Single operators below
         match operator.parse::<ComparisonOperator>() {
             Ok(op) => self.tokens.push(Token::ComparisonOperatorToken(op)),
             Err(_) => {} // Handle invalid comparison operators if necessary
@@ -168,55 +180,6 @@ impl Lexer {
     }
 
     
-
-    
-    // fn consume_operator_or_bitwise(&mut self) {
-    //     let ch = self.input.get(self.index).copied().unwrap_or_default();
-    //     let mut operator = String::new();
-    //     operator.push(ch);
-    //     self.index += 1;
-    //
-    //     if let Some(next_ch) = self.input.get(self.index).copied() {
-    //         match (ch, next_ch) {
-    //             ('&', '&') | ('|', '|') => {
-    //                 operator.push(next_ch);
-    //                 self.index += 1;
-    //                 match operator.parse::<LogicalOperator>() {
-    //                     Ok(op) => self.tokens.push(Token::LogicalOperatorToken(op)),
-    //                     Err(_) => {} // Handle invalid logical operators if necessary
-    //                 }
-    //                 return;
-    //             }
-    //
-    //             // Bitwise shift operators (<<, >>)
-    //             ('<', '<') | ('>', '>') => {
-    //                 operator.push(next_ch);
-    //                 self.index += 1;
-    //                 match operator.parse::<BitwiseOperator>() {
-    //                     Ok(op) => self.tokens.push(Token::BitwiseOperatorToken(op)),
-    //                     Err(_) => {} // Handle invalid bitwise operators if necessary
-    //                 }
-    //                 return;
-    //             }
-    //
-    //             // If no multi-character match, fall back to single character operators
-    //             _ => {}
-    //         }
-    //     }
-    //
-    //     match operator.parse::<LogicalOperator>() {
-    //         Ok(op) => self.tokens.push(Token::LogicalOperatorToken(op)),
-    //         Err(_) => {} // Handle invalid logical operators if necessary
-    //     }
-    //     
-    //     match operator.parse::<BitwiseOperator>() {
-    //         Ok(op) => self.tokens.push(Token::BitwiseOperatorToken(op)),
-    //         Err(_) => {} // Handle invalid bitwise operators if necessary
-    //     }
-    // }
-
-
-    
     fn consume_keyword_and_identifier(&mut self) {
         let mut identifier = String::new();
 
@@ -229,7 +192,7 @@ impl Lexer {
             }
         }
 
-        let keywords = ["if", "else", "while", "for", "return", "print"];
+        let keywords = ["if", "else", "elif", "while", "for", "in", "return", "print", "fn"];
         if keywords.contains(&identifier.as_str()) {
             self.tokens.push(Token::Keyword(identifier));
         } else {
@@ -283,19 +246,6 @@ impl Lexer {
     }
 
     
-    // fn consume_operator(&mut self) {
-    //     if let Some(ch) = self.input.get(self.index).copied() {
-    //         let operator = ch.to_string();
-    //         self.index += 1;
-    //
-    //         match operator.parse::<Operator>() {
-    //             Ok(op) => self.tokens.push(Token::OperatorToken(op)),
-    //             Err(_) => {} // Handle invalid operators if necessary
-    //         }
-    //     }
-    // }
-
-
     fn consume_number(&mut self) {
         let mut number = String::new();
         let mut is_float = false;
