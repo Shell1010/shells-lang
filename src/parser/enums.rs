@@ -1,6 +1,7 @@
 use crate::lexer::enums::*;
 use crate::lexer::Token;
 
+
 #[derive(Debug)]
 pub enum Expression {
     LiteralValue(LiteralValue),
@@ -33,6 +34,8 @@ pub enum LiteralValue {
     Boolean(bool),
     Null,
 }
+
+
 
 #[derive(Debug)]
 pub enum Statement {
