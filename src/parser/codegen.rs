@@ -45,6 +45,29 @@ pub enum CodegenError {
     BuildError(String),
 }
 
+impl<'ctx> Codegen<'ctx> for Statement {
+    fn generate_ir(&self, context: &mut CodegenContext<'ctx>) -> Result<BasicValueEnum<'ctx>, CodegenError> {
+        match self {
+            // ignore for now i fail
+            // too tored
+            Statement::Return(value) => {
+                let val = return context.context;
+                let val = context.builder.build_return(value).unwrap();
+                match *value {
+                    Some(value) => {
+                        
+                        Ok(val.as_any_value_enum().into())
+                        
+                    },
+                    None => Err(CodegenError::BuildError("Fail".into()))
+                }
+
+            },
+            _ => todo!("I forgo")
+        } 
+    }
+}
+
 impl<'ctx> Codegen<'ctx> for LiteralValue {
     fn generate_ir(&self, context: &mut CodegenContext<'ctx>) -> Result<BasicValueEnum<'ctx>, CodegenError> {
         match self {
@@ -123,34 +146,32 @@ impl<'ctx> Codegen<'ctx> for Expression {
                 let start_value = range_val.get_first_use().unwrap().get_used_value();
                 context.builder.build_store(loop_var_ptr, start_value.left().unwrap());
 
-
-
                 // Jump to the start block.
                 context.builder.build_unconditional_branch(start_block);
-
-                // Generate the loop condition.
-                context.builder.position_at_end(start_block);
-                let pointee_type = context.context.ptr_type(inkwell::AddressSpace::default());
-                let current_val = context.builder.build_load(pointee_type, loop_var_ptr, identifier_name).unwrap().into_int_value();
-                let end_value = range_val.;
-                let cond = context.builder.build_int_compare(IntPredicate::ULT, current_val, end_value, "forcond");
-                context.builder.build_conditional_branch(cond, body_block, end_block);
-
-                // Generate the body of the loop.
-                context.builder.position_at_end(body_block);
-                for stmt in block {
-                    stmt.generate_ir(context)?;
-                }
-                // Increment the loop variable.
-                let incremented = context.builder.build_int_add(current_val, range_val.get_step(), "increment");
-                context.builder.build_store(loop_var_ptr, incremented);
-
-                // Jump back to the condition.
-                context.builder.build_unconditional_branch(start_block);
-
-                // End block.
-                context.builder.position_at_end(end_block);
-                Ok(context.builder.build_unreachable().into())
+                todo!()
+                // Fucking myself bad
+                // context.builder.position_at_end(start_block);
+                // let pointee_type = context.context.ptr_type(inkwell::AddressSpace::default());
+                // let current_val = context.builder.build_load(pointee_type, loop_var_ptr, identifier_name).unwrap().into_int_value();
+                // let end_value = range_val;
+                // let cond = context.builder.build_int_compare(IntPredicate::ULT, current_val, end_value, "forcond");
+                // context.builder.build_conditional_branch(cond, body_block, end_block);
+                //
+                // // Generate the body of the loop.
+                // context.builder.position_at_end(body_block);
+                // for stmt in block {
+                //     stmt.generate_ir(context)?;
+                // }
+                // // Increment the loop variable.
+                // let incremented = context.builder.build_int_add(current_val, range_val.get_step(), "increment");
+                // context.builder.build_store(loop_var_ptr, incremented);
+                //
+                // // Jump back to the condition.
+                // context.builder.build_unconditional_branch(start_block);
+                //
+                // // End block.
+                // context.builder.position_at_end(end_block);
+                // Ok(context.builder.build_unreachable().into())
             }
             Expression::Assignment(name, val) => {
 
